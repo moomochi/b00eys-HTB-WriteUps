@@ -34,38 +34,64 @@ These programs support far more compression and encryption methods than the inte
 
 This made sense as Brutus was a password protected file , however downloading a data compression tool like 7-Zip fixed the issue right away and I was able to open up the file.
 
-NOTE FROM 09.2025 : On Hack the Box there's a key button next to the Download files that will display the password for the password protected file to unzip the files itself if you are planning to open these files on the provides HTB Machine or a Linux Machine. 
+NOTE FROM 09.2025 : On Hack the Box there's a key button next to the Download files that will display the password for the password protected file to unzip the files itself, if you are planning to open these files on the provides HTB Machine or a Linux Machine. 
 
 # Trying to Solve Brutus.
 So Brutus has 8 tasks in total to complete. This ranges from identifying the IP address used by the attacker to which command they used in sudo. 
 
 
-_TASK 1_
-_Analyzing the auth.log, can you identify the IP address used by the attacker to carry out a brute force attack?_
+### _TASK 1_
+Analyzing the auth.log, can you identify the IP address used by the attacker to carry out a brute force attack?
+
+*We will be analyzing the auth.log to figure out what IP address that the attacker used to carry out the brute force attack…….*
+
+*After  unzipping the password provided by HTB, I checked out the auth.log by using the 
+Cat auth.log command.
+After checking out the auth.log I checked for signs of the attacker trying to brute force an attack, most likely the attacker
+Trying to log into the server they are trying to connect after successfully opening a session for user root.*
+
+*I notice the message from the logs 
+Invalid user admin from 65.2.161.68 port 46380
+along with the attacker trying to log into the server using multiple ports (possibly port knocking)*
 
 
-_TASK 2_
-_The brute force attempts were successful, and the attacker gained access to an account on the server. What is the username of this account?_
+### _TASK 2_
+The brute force attempts were successful, and the attacker gained access to an account on the server. What is the username of this account?
+
+*Used the command 
+grep "session opened" auth.log 
+To show the first successful login of the attacker. Which was root.*
 
 
-_TASK 3_
-_SSH login sessions are tracked and assigned a session number upon login. What is the session number assigned to the attacker's session for the user account from Question 2?_
+
+### _TASK 3_
+SSH login sessions are tracked and assigned a session number upon login. What is the session number assigned to the attacker's session for the user account from Question 2?
 
 
-_TASK 4_
-_SSH login sessions are tracked and assigned a session number upon login. What is the session number assigned to the attacker's session for the user account from Question 2?_
+### _TASK 4_
+SSH login sessions are tracked and assigned a session number upon login. What is the session number assigned to the attacker's session for the user account from Question 2?
 
-_TASK 5_
-_The attacker added a new user as part of their persistence strategy on the server and gave this new user account higher privileges. What is the name of this account?_
+### _TASK 5_
+The attacker added a new user as part of their persistence strategy on the server and gave this new user account higher privileges. What is the name of this account?
 
-_TASK 6_
-_What is the MITRE ATT&CK sub-technique ID used for persistence by creating a new account?_
+*We will now try to find the user name of the attacker after a successful log in. 
+After using this command 
+grep "login successful" auth.log 
+After typing in the command, a couple lines print out. Which I take a look. 
+This allowed me to know which username was used to log in based on the successful login which is*
 
-_TASK 7_
-_What time did the attacker's first SSH session end according to auth.log?_
+*Mar  6 06:37:34 ip-172-31-35-28 systemd-logind[411]: New session 49 of user cyberjunkie.*
 
-_TASK 8_
-_The attacker logged into their backdoor account and utilized their higher privileges to download a script. What is the full command executed using sudo?_
+*Showing  a successful attempt from a user cyberjunkie.*
+
+### _TASK 6_
+What is the MITRE ATT&CK sub-technique ID used for persistence by creating a new account?
+
+### _TASK 7_
+What time did the attacker's first SSH session end according to auth.log?
+
+### _TASK 8_
+The attacker logged into their backdoor account and utilized their higher privileges to download a script. What is the full command executed using sudo?
 
 
 
